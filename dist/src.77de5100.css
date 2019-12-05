@@ -493,6 +493,7 @@ body {
 @media (min-width: 999px) {
   .app-text {
     flex: 1;
+    max-height: initial;
     height: auto;
   }
 }

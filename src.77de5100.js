@@ -327,7 +327,64 @@ function prepareText(text, options) {
 
   return text;
 }
-},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"index.ts":[function(require,module,exports) {
+},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"scripts/editor.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var Editor =
+/** @class */
+function () {
+  function Editor(root) {
+    this.root = root;
+    this._value = '';
+    this.$ = {};
+    this.init();
+  }
+
+  Editor.prototype.init = function () {
+    this.getElements();
+    this.initValue();
+    this.initEvents();
+  };
+
+  Editor.prototype.initEvents = function () {
+    var _this = this;
+
+    this.$.realText.addEventListener('keydown', function () {
+      return _this.readRealText();
+    });
+    this.$.realText.addEventListener('keyup', function () {
+      return _this.readRealText();
+    });
+  };
+
+  Editor.prototype.readRealText = function () {
+    this._value = this.$.realText.value;
+    this.updateDecText();
+  };
+
+  Editor.prototype.updateDecText = function () {
+    this.$.decText.innerText = this._value;
+  };
+
+  Editor.prototype.initValue = function () {
+    this._value = this.$.realText.value;
+    this.updateDecText();
+  };
+
+  Editor.prototype.getElements = function () {
+    this.$.decText = this.root.querySelector('.app-editor__dec-text');
+    this.$.realText = this.root.querySelector('.app-editor__real-text');
+  };
+
+  return Editor;
+}();
+
+exports.default = Editor;
+},{}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -348,11 +405,15 @@ var calc_char_pair_frequency_1 = __importDefault(require("./scripts/algorithms/c
 
 var calc_char_frequency_1 = __importDefault(require("./scripts/algorithms/char-frequency/calc-char-frequency"));
 
+var editor_1 = __importDefault(require("./scripts/editor"));
+
 var $ = {};
 $.root = document.querySelector('.app');
+$.editor = $.root.querySelector('.app-editor');
+var editor = new editor_1.default($.editor);
 window.calcCharFrequency = calc_char_frequency_1.default;
 window.calcCharPairFrequency = calc_char_pair_frequency_1.default;
-},{"normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/editor":"scripts/editor.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -380,7 +441,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46017" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36727" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

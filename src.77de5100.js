@@ -195,8 +195,49 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.ts":[function(require,module,exports) {
+},{"_css_loader":"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"scripts/calc-frequency.ts":[function(require,module,exports) {
 "use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/**
+ * Calculate character frequency
+ * @param text
+ * @param options
+ * @returns map of character frequency where key is a char contain value in range [0, 1]
+ */
+
+function calcFrequency(text, options) {
+  var chars = text.trim().toLowerCase().split('');
+  return calcFrequencyOfChars(chars);
+}
+
+exports.default = calcFrequency;
+
+function calcFrequencyOfChars(chars) {
+  var charsMap = new Map();
+  var frequencyMap = new Map();
+  chars.forEach(function (char) {
+    if (charsMap.has(char)) {
+      charsMap.set(char, charsMap.get(char) + 1);
+    } else {
+      charsMap.set(char, 1);
+    }
+  });
+  charsMap.forEach(function (value, key) {
+    frequencyMap[key] = value / chars.length;
+  });
+  return frequencyMap;
+}
+},{}],"index.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -206,9 +247,12 @@ require("normalize.scss/normalize.scss");
 
 require("./index.scss");
 
+var calc_frequency_1 = __importDefault(require("./scripts/calc-frequency"));
+
 var $ = {};
 $.root = document.querySelector('.app');
-},{"normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+window.calcFrequency = calc_frequency_1.default;
+},{"normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/calc-frequency":"scripts/calc-frequency.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;

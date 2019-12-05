@@ -1,19 +1,31 @@
 interface IFrequencyOptions {
+   ignoreCase: boolean;
+   spaces: boolean;
+   digits: boolean;
+   punctuation: boolean;
+}
 
+const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
+   ignoreCase: true,
+   spaces: false,
+   digits: false,
+   punctuation: false,
 }
 
 /**
  * Calculate character frequency
  * @param text
  * @param options
- * @returns map of character frequency where key is a char contain value in range [0, 1]
+ * @returns map of characters and character frequency (in range [0, 1])
  */
-export default function calcFrequency(text: string, options: IFrequencyOptions): Map<string, number> { 
-   const chars = text.trim().toLowerCase().split('');
-   return calcFrequencyOfChars(chars);   
+export default function calcFrequency(text: string, options: IFrequencyOptions): Map<string, number> {
+   options = { ...DEF_FREQUENCY_OPTIONS, ...options };
+   text = prepareText(text, options);
+
+   return calcFrequencyOfChars(text.split(''));
 }
 
-function calcFrequencyOfChars(chars: string[]): Map<string, number> { 
+function calcFrequencyOfChars(chars: string[]): Map<string, number> {
    const charsMap: Map<string, number> = new Map();
    const frequencyMap: Map<string, number> = new Map();
 
@@ -30,4 +42,20 @@ function calcFrequencyOfChars(chars: string[]): Map<string, number> {
    });
 
    return frequencyMap;
+}
+
+function prepareText(text: string, options: IFrequencyOptions): string {
+   const { ignoreCase, spaces, digits, punctuation } = options;
+
+   text = text.trim();
+
+   if (ignoreCase) text = text.toLowerCase();
+   if (!spaces) text = text.replace(/\s+/g, '')
+   if (!digits) text = text.replace(/\d+/g, '');
+
+   if (!punctuation) {
+      text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]+/g, '');
+   }
+
+   return text;
 }

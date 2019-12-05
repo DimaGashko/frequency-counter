@@ -1,1 +1,23 @@
 section.app-toolbar(aria-label="toolbar")
+
+   form.app-toolbar__form
+      ul.app-toolbar__list
+         li.app-toolbar__item
+            input(type="checkbox" id="app-toolbar__highlight" name="highlight")
+            label.app-toolbar__label(for="app-toolbar__highlight") Highlight
+
+         li.app-toolbar__item
+            input(type="checkbox" id="app-toolbar__case" name="case")
+            label.app-toolbar__label(for="app-toolbar__case") Ignore case
+
+         li.app-toolbar__item
+            input(type="checkbox" id="app-toolbar__case" name="spaces")
+            label.app-toolbar__label(for="app-toolbar__spaces") No spaces
+
+         li.app-toolbar__item
+            input(type="checkbox" id="app-toolbar__digits" name="digits")
+            label.app-toolbar__label(for="app-toolbar__digits") No digits
+
+         li.app-toolbar__item
+            input(type="checkbox" id="app-toolbar__punctuation" name="punctuation")
+            label.app-toolbar__label(for="app-toolbar__punctuation") No punctuation

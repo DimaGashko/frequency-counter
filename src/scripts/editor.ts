@@ -10,10 +10,11 @@ export default class Editor {
    private MAX_LIVE_HIGHLIGHT_LEN = 2000;
 
    private _value = '';
-   private _prevDecTextValue = '';
    private $: IEditorElements = {};
 
    private _decTextUpdatingFrame = 0;
+
+   private _highlight = false;
 
    constructor(private root: HTMLElement) {
       this.init();
@@ -22,7 +23,20 @@ export default class Editor {
    private init() {
       this.getElements();
       this.initValue();
+      this.setHighlight(this._highlight);
       this.initEvents();
+   }
+
+   public setHighlight(val: boolean) {
+      this._highlight = val;
+      this.updateDecText();
+
+      const type = (val) ? 'remove' : 'add';
+      this.root.classList[type]('app-editor--no-highlight');
+   }
+
+   public getText() {
+      return this._value;
    }
 
    private initEvents() {
@@ -80,22 +94,28 @@ export default class Editor {
    }
 
    private updateDecText() {
-      if (this._prevDecTextValue === this._value) return;
-      this._prevDecTextValue = this._value;
-
-      if (this._value.length > this.MAX_HIGHLIGHT_LEN) {
+      if (!this._highlight || this._value.length > this.MAX_HIGHLIGHT_LEN) {
          this.$.decText.innerHTML = this._value;
          return;
       }
-
+      console.log(this._value);
       this.$.decText.innerHTML = this._value.split('').map((item, i) => {
-         return (i % 2) ? `<span style="color: red">${item}</span>` : item;
+         item = this.escape(item);
+         return (i % 2 && 0) ? `<span style="color: red">${item}</span>` : item;
       }).join('');
+   }
+
+   private escape(str) {
+      return str
+         .replace(/&/g, '&amp;')
+         .replace(/</g, '&lt;')
+         .replace(/>/g, '&gt;')
+         .replace(/"/g, '&quot;')
+         .replace(/'/g, '&#039;')
    }
 
    private initValue() {
       this._value = this.$.realText.value;
-      this.updateDecText();
    }
 
    private getElements() {

@@ -304,7 +304,7 @@ var DEF_FREQUENCY_OPTIONS = {
  */
 
 function calcCharFrequency(text, options) {
-  options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options);
+  options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options || {});
   text = prepareText(text, options);
   return _calc_frequency_1.default(text.split(''));
 }
@@ -488,16 +488,28 @@ function () {
     this.MAX_HIGHLIGHT_LEN = 10000;
     this.MAX_LIVE_HIGHLIGHT_LEN = 2000;
     this._value = '';
-    this._prevDecTextValue = '';
     this.$ = {};
     this._decTextUpdatingFrame = 0;
+    this._highlight = false;
     this.init();
   }
 
   Editor.prototype.init = function () {
     this.getElements();
     this.initValue();
+    this.setHighlight(this._highlight);
     this.initEvents();
+  };
+
+  Editor.prototype.setHighlight = function (val) {
+    this._highlight = val;
+    this.updateDecText();
+    var type = val ? 'remove' : 'add';
+    this.root.classList[type]('app-editor--no-highlight');
+  };
+
+  Editor.prototype.getText = function () {
+    return this._value;
   };
 
   Editor.prototype.initEvents = function () {
@@ -560,22 +572,26 @@ function () {
   };
 
   Editor.prototype.updateDecText = function () {
-    if (this._prevDecTextValue === this._value) return;
-    this._prevDecTextValue = this._value;
+    var _this = this;
 
-    if (this._value.length > this.MAX_HIGHLIGHT_LEN) {
+    if (!this._highlight || this._value.length > this.MAX_HIGHLIGHT_LEN) {
       this.$.decText.innerHTML = this._value;
       return;
     }
 
+    console.log(this._value);
     this.$.decText.innerHTML = this._value.split('').map(function (item, i) {
-      return i % 2 ? "<span style=\"color: red\">" + item + "</span>" : item;
+      item = _this.escape(item);
+      return i % 2 && 0 ? "<span style=\"color: red\">" + item + "</span>" : item;
     }).join('');
+  };
+
+  Editor.prototype.escape = function (str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
   };
 
   Editor.prototype.initValue = function () {
     this._value = this.$.realText.value;
-    this.updateDecText();
   };
 
   Editor.prototype.getElements = function () {
@@ -613,7 +629,36 @@ var editor_1 = __importDefault(require("./scripts/editor"));
 var $ = {};
 $.root = document.querySelector('.app');
 $.editor = $.root.querySelector('.app-editor');
+var toolbarForm = $.root.querySelector('.app-toolbar__form');
 var editor = new editor_1.default($.editor);
+init();
+initEvents();
+
+function init() {
+  editor.setHighlight(toolbarForm.highlight.checked);
+}
+
+function initEvents() {
+  toolbarForm.highlight.addEventListener('change', function () {
+    editor.setHighlight(toolbarForm.highlight.checked);
+  });
+  toolbarForm.case.addEventListener('change', run);
+  toolbarForm.spaces.addEventListener('change', run);
+  toolbarForm.digits.addEventListener('change', run);
+  toolbarForm.punctuation.addEventListener('change', run);
+}
+
+function run() {
+  var text = editor.getText();
+  var frequency = calc_char_frequency_1.default(text, {
+    ignoreCase: toolbarForm.case,
+    spaces: !toolbarForm.spaces,
+    digits: !toolbarForm.digits,
+    punctuation: !toolbarForm.punctuation
+  });
+  console.log(frequency);
+}
+
 window.calcCharFrequency = calc_char_frequency_1.default;
 window.calcCharPairFrequency = calc_char_pair_frequency_1.default;
 },{"normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/editor":"scripts/editor.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {

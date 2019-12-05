@@ -1,3 +1,4 @@
+import { throttle } from 'throttle-debounce';
 
 interface IEditorElements {
    [name: string]: HTMLElement,
@@ -5,7 +6,11 @@ interface IEditorElements {
 }
 
 export default class Editor {
+   private MAX_HIGHLIGHT_LEN = 10000;
+   private MAX_LIVE_HIGHLIGHT_LEN = 2000;
+
    private _value = '';
+   private _prevDecTextValue = '';
    private $: IEditorElements = {};
 
    private _decTextUpdatingFrame = 0;
@@ -21,12 +26,30 @@ export default class Editor {
    }
 
    private initEvents() {
-      this.$.realText.addEventListener('keydown', () => {
+      this.$.realText.addEventListener('input', () => {
+         if (this._value.length > this.MAX_LIVE_HIGHLIGHT_LEN) {
+            return;
+         }
+
          this.startDecTextUpdating();
+         setTimeout(() => this.stopDecTextUpdating(), 1000);
       });
 
-      this.$.realText.addEventListener('keyup', () => {
+      this.$.realText.addEventListener('input', throttle(300, () => {
+         if (this._value.length > this.MAX_LIVE_HIGHLIGHT_LEN) {
+            this.updateDecTextScrolls();
+            this.readRealText();
+         }
+      }));
+
+      this.$.realText.addEventListener('keyup', throttle(300, () => {
          this.stopDecTextUpdating();
+         this.updateDecTextScrolls();
+         this.readRealText();
+      }));
+
+      this.$.realText.addEventListener('scroll', () => {
+         this.updateDecTextScrolls();
       });
    }
 
@@ -36,7 +59,6 @@ export default class Editor {
       const editor = this;
 
       this._decTextUpdatingFrame = requestAnimationFrame(function tik() {
-         console.log('hi')
          editor.readRealText();
          editor._decTextUpdatingFrame = requestAnimationFrame(tik);
       });
@@ -46,14 +68,29 @@ export default class Editor {
       cancelAnimationFrame(this._decTextUpdatingFrame);
       this._decTextUpdatingFrame = 0;
    }
-
+ 
    private readRealText() {
       this._value = this.$.realText.value;
       this.updateDecText();
    }
 
+   private updateDecTextScrolls() {
+      this.$.decText.scrollTop = this.$.realText.scrollTop;
+      this.$.decText.scrollLeft = this.$.realText.scrollLeft;
+   }
+
    private updateDecText() {
-      this.$.decText.innerText = this._value;
+      if (this._prevDecTextValue === this._value) return;
+      this._prevDecTextValue = this._value;
+
+      if (this._value.length > this.MAX_HIGHLIGHT_LEN) {
+         this.$.decText.innerHTML = this._value;
+         return;
+      }
+
+      this.$.decText.innerHTML = this._value.split('').map((item, i) => {
+         return (i % 2) ? `<span style="color: red">${item}</span>` : item;
+      }).join('');
    }
 
    private initValue() {

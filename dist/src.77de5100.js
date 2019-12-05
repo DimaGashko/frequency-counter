@@ -341,6 +341,7 @@ function () {
     this.root = root;
     this._value = '';
     this.$ = {};
+    this._decTextUpdatingFrame = 0;
     this.init();
   }
 
@@ -354,11 +355,28 @@ function () {
     var _this = this;
 
     this.$.realText.addEventListener('keydown', function () {
-      return _this.readRealText();
+      _this.startDecTextUpdating();
     });
     this.$.realText.addEventListener('keyup', function () {
-      return _this.readRealText();
+      _this.stopDecTextUpdating();
     });
+  };
+  /** Start automatic dec text updating */
+
+
+  Editor.prototype.startDecTextUpdating = function () {
+    if (this._decTextUpdatingFrame) return;
+    var editor = this;
+    this._decTextUpdatingFrame = requestAnimationFrame(function tik() {
+      console.log('hi');
+      editor.readRealText();
+      editor._decTextUpdatingFrame = requestAnimationFrame(tik);
+    });
+  };
+
+  Editor.prototype.stopDecTextUpdating = function () {
+    cancelAnimationFrame(this._decTextUpdatingFrame);
+    this._decTextUpdatingFrame = 0;
   };
 
   Editor.prototype.readRealText = function () {

@@ -8,6 +8,8 @@ export default class Editor {
    private _value = '';
    private $: IEditorElements = {};
 
+   private _decTextUpdatingFrame = 0;
+
    constructor(private root: HTMLElement) {
       this.init();
    }
@@ -19,8 +21,30 @@ export default class Editor {
    }
 
    private initEvents() {
-      this.$.realText.addEventListener('keydown', () => this.readRealText());
-      this.$.realText.addEventListener('keyup', () => this.readRealText())
+      this.$.realText.addEventListener('keydown', () => {
+         this.startDecTextUpdating();
+      });
+
+      this.$.realText.addEventListener('keyup', () => {
+         this.stopDecTextUpdating();
+      });
+   }
+
+   /** Start automatic dec text updating */
+   private startDecTextUpdating() {
+      if (this._decTextUpdatingFrame) return;
+      const editor = this;
+
+      this._decTextUpdatingFrame = requestAnimationFrame(function tik() {
+         console.log('hi')
+         editor.readRealText();
+         editor._decTextUpdatingFrame = requestAnimationFrame(tik);
+      });
+   }
+
+   private stopDecTextUpdating() {
+      cancelAnimationFrame(this._decTextUpdatingFrame);
+      this._decTextUpdatingFrame = 0;
    }
 
    private readRealText() {

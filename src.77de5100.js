@@ -198,19 +198,42 @@ module.hot.accept(reloadCSS);
 },{"_css_loader":"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"scripts/calc-frequency.ts":[function(require,module,exports) {
 "use strict";
 
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+var DEF_FREQUENCY_OPTIONS = {
+  ignoreCase: true,
+  spaces: false,
+  digits: false,
+  punctuation: false
+};
 /**
  * Calculate character frequency
  * @param text
  * @param options
- * @returns map of character frequency where key is a char contain value in range [0, 1]
+ * @returns map of characters and character frequency (in range [0, 1])
  */
 
 function calcFrequency(text, options) {
-  var chars = text.trim().toLowerCase().split('');
-  return calcFrequencyOfChars(chars);
+  options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options);
+  text = prepareText(text, options);
+  return calcFrequencyOfChars(text.split(''));
 }
 
 exports.default = calcFrequency;
@@ -229,6 +252,23 @@ function calcFrequencyOfChars(chars) {
     frequencyMap[key] = value / chars.length;
   });
   return frequencyMap;
+}
+
+function prepareText(text, options) {
+  var ignoreCase = options.ignoreCase,
+      spaces = options.spaces,
+      digits = options.digits,
+      punctuation = options.punctuation;
+  text = text.trim();
+  if (ignoreCase) text = text.toLowerCase();
+  if (!spaces) text = text.replace(/\s+/g, '');
+  if (!digits) text = text.replace(/\d+/g, '');
+
+  if (!punctuation) {
+    text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]+/g, '');
+  }
+
+  return text;
 }
 },{}],"index.ts":[function(require,module,exports) {
 "use strict";

@@ -14,13 +14,13 @@
    }
 }
 
-.app-text {
+.app-editor {
    max-height: 65vh;
    height: 500px;
 
    @include breakpoint($large-tablet) {
       flex: 1;
-      
+
       max-height: initial;
       height: auto;
    }

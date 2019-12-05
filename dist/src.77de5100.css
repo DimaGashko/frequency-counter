@@ -469,6 +469,7 @@ body {
 }
 .app-toolbar__label {
   margin-left: 0.4em;
+  user-select: none;
   cursor: pointer;
 }
 
@@ -508,7 +509,13 @@ body {
 
 .app-text {
   position: relative;
-  margin-left: 0 0.3em;
+  margin-left: 0.3em;
+}
+.app-text--no-highlight .app-text__dec-text {
+  display: none;
+}
+.app-text--no-highlight .app-text__real-text {
+  color: inherit;
 }
 .app-text__dec-text, .app-text__real-text {
   position: absolute;
@@ -526,7 +533,8 @@ body {
   outline: none;
   border: none;
   background: none;
-  color: transparent;
+  color: rgba(0, 255, 0, 0.33);
+  caret-color: #000;
 }
 
 .app-res {

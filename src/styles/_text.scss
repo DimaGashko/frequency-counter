@@ -1,6 +1,16 @@
 .app-text {
    position: relative;
-   margin-left: 0 0.3em;
+   margin-left: 0.3em;
+
+   &--no-highlight {
+      .app-text__dec-text {
+         display: none;
+      }
+
+      .app-text__real-text {
+         color: inherit;
+      }
+   }
 
    &__dec-text,
    &__real-text {
@@ -24,6 +34,7 @@
       border: none;
       background: none;
 
-      color: transparent;
+      color: rgba(0,255,0, 0.33);
+      caret-color: #000;
    }
 }

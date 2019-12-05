@@ -1,5 +1,5 @@
 .app-toolbar {
-   padding: 12px;
+   padding: 21px 16px;
 
    background-color: #f5f5f5;
    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -14,16 +14,17 @@
 
       list-style: none;
 
-      margin-left: -10px;
-      margin-top: -5px;
+      margin-left: -1.1em;
+      margin-top: -8px;
    }
 
    &__item {
-      margin-left: 10px;
-      margin-top: 5px;
+      margin-left: 1.1em;
+      margin-top: 8px;
    }
 
    &__label {
       margin-left: 0.4em;
+      cursor: pointer;
    }
 }

@@ -1,3 +1,5 @@
+import _calcFrequency from "./_calc-frequency";
+
 interface IFrequencyOptions {
    ignoreCase: boolean;
    spaces: boolean;
@@ -13,35 +15,16 @@ const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
 }
 
 /**
- * Calculate character frequency
+ * Calculate character frequency in the text
  * @param text
  * @param options
  * @returns map of characters and character frequency (in range [0, 1])
  */
-export default function calcFrequency(text: string, options: IFrequencyOptions): Map<string, number> {
+export default function calcCharFrequency(text: string, options: IFrequencyOptions): Map<string, number> {
    options = { ...DEF_FREQUENCY_OPTIONS, ...options };
    text = prepareText(text, options);
 
-   return calcFrequencyOfChars(text.split(''));
-}
-
-function calcFrequencyOfChars(chars: string[]): Map<string, number> {
-   const charsMap: Map<string, number> = new Map();
-   const frequencyMap: Map<string, number> = new Map();
-
-   chars.forEach((char) => {
-      if (charsMap.has(char)) {
-         charsMap.set(char, charsMap.get(char) + 1);
-      } else {
-         charsMap.set(char, 1);
-      }
-   });
-
-   charsMap.forEach((value, key) => {
-      frequencyMap[key] = value / chars.length;
-   });
-
-   return frequencyMap;
+   return _calcFrequency(text.split(''));
 }
 
 function prepareText(text: string, options: IFrequencyOptions): string {

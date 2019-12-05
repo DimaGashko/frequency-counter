@@ -1,8 +1,11 @@
 import 'normalize.scss/normalize.scss';
 import './index.scss';
-import calcFrequency from './scripts/calc-frequency';
+
+import calcCharPairFrequency from './scripts/algorithms/char-frequency/calc-char-pair-frequency';
+import calcCharFrequency from './scripts/algorithms/char-frequency/calc-char-frequency';
 
 const $: {[type: string]: HTMLElement} = {};
 $.root = document.querySelector('.app');
 
-(<any>window).calcFrequency = calcFrequency; 
+(<any>window).calcCharFrequency = calcCharFrequency; 
+(<any>window).calcCharPairFrequency = calcCharPairFrequency; 

@@ -8,6 +8,8 @@
       "build": "parcel build src/index.pug --public-url ."
    },
    "dependencies": {
+      "@types/chart.js": "^2.9.3",
+      "chart.js": "^2.9.3",
       "throttle-debounce": "^2.1.0"
    },
    "devDependencies": {

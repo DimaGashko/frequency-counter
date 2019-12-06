@@ -5,6 +5,7 @@ import './index.scss';
 import calcCharPairFrequency, { ICharPairsFrequency } from './scripts/algorithms/char-frequency/calc-char-pair-frequency';
 import calcCharFrequency, { ICharFrequency } from './scripts/algorithms/char-frequency/calc-char-frequency';
 import Editor from './scripts/Editor';
+import Chart from 'chart.js';
 
 const $: { [type: string]: HTMLElement } = {};
 $.root = document.querySelector('.app');
@@ -14,6 +15,12 @@ $.uniqueChars = $.root.querySelector('.app-res__unique-chars');
 $.uniquePairs = $.root.querySelector('.app-res__unique-pairs')
 
 const toolbarForm: HTMLFormElement = $.root.querySelector('.app-toolbar__form');
+
+const frequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__frequency-chart');
+const pairsFrequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__pairs-frequency-chart');
+
+const frequencyChartCtx = frequencyChart.getContext('2d');
+const pairsFrequencyChartCtx = pairsFrequencyChart.getContext('2d');
 
 const editor = new Editor($.editor);
 
@@ -97,3 +104,34 @@ function getMostFrequent(frequency: Map<string, number>) {
 
     return { val, key };
 }
+
+var myChart = new Chart(frequencyChartCtx, {
+    type: 'bar',
+    data: { 
+        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+        datasets: [{
+            label: '# of Votes',
+            data: [12, 19, 3, 5, 2, 3,1,2,3,4],
+            backgroundColor: [
+                'rgba(255, 99, 132, 2)',
+                'rgba(54, 162, 235, 2)',
+                'rgba(255, 206, 86, 2)',
+                'rgba(75, 192, 192, 2)',
+                'rgba(153, 102, 255, 2)',
+                'rgba(255, 159, 64, 2)'
+            ],
+        }]
+    },
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
+});
+
+myChart.update

@@ -7,4 +7,16 @@
       border: none;
       border-left: 1px solid rgba(0, 0, 0, 0.12);
    }
+
+   &__summary-label {
+      margin: 0;
+      text-align: center;
+   }
+
+   &__frequency-chart-container,
+   &__pairs-frequency-chart-container {
+      height: 50vh;
+      max-height: 500px;
+      min-height: 350px;
+   }
 }

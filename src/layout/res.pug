@@ -1,4 +1,11 @@
 section.app-res(aria-label="result of text analyze") 
-   .app-res__summary Total num of chars: <strong class="app-res__total">---</strong> 
-      | (unique <strong class="app-res__unique-chars">--</strong>). 
-      | Unique two-character sequences: <strong class="app-res__unique-pairs">--</strong>
+   p.app-res__summary-label Total num of chars: <strong class="app-res__total">---</strong> 
+      | (unique <strong class="app-res__unique-chars">--</strong>)
+
+   .app-res__frequency-chart-container
+      canvas.app-res__frequency-chart
+
+   p.app-res__summary-label Unique two-character sequences: <strong class="app-res__unique-pairs">---</strong>
+
+   .app-res__pairs-frequency-chart-container
+      canvas.app-res__pairs-frequency-chart

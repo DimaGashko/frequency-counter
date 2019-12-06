@@ -14,8 +14,26 @@ const toolbarForm: HTMLFormElement = $.root.querySelector('.app-toolbar__form');
 
 const editor = new Editor($.editor);
 
+const run = debounce(500, function run() {
+    const text = editor.getText();
+
+    const frequency = calcCharFrequency(text, {
+        ignoreCase: toolbarForm.case.checked,
+        spaces: !toolbarForm.spaces.checked,
+        digits: !toolbarForm.digits.checked,
+        punctuation: !toolbarForm.punctuation.checked,
+    });
+
+    const highlightMap = frequencyToHighlightMap(frequency);
+    editor.setHighlightMap(highlightMap);
+
+    console.log(frequency)
+    console.log(highlightMap);
+});
+
 init();
 initEvents();
+run();
 
 function init() {
     editor.setHighlight(toolbarForm.highlight.checked);
@@ -35,23 +53,6 @@ function initEvents() {
     toolbarForm.digits.addEventListener('change', run);
     toolbarForm.punctuation.addEventListener('change', run);
 }
-
-const run = debounce(500, function run() {
-    const text = editor.getText();
-
-    const frequency = calcCharFrequency(text, {
-        ignoreCase: toolbarForm.case,
-        spaces: !toolbarForm.spaces,
-        digits: !toolbarForm.digits,
-        punctuation: !toolbarForm.punctuation,
-    });
-
-    const highlightMap = frequencyToHighlightMap(frequency);
-    editor.setHighlightMap(highlightMap);
-
-    console.log(frequency)
-    console.log(highlightMap);
-});
 
 function frequencyToHighlightMap(frequency: Map<string, number>) {
     const highlightMap: Map<string, string> = new Map();

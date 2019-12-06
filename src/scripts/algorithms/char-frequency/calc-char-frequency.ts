@@ -21,6 +21,8 @@ const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
  * @returns map of characters and character frequency (in range [0, 1])
  */
 export default function calcCharFrequency(text: string, options?: IFrequencyOptions): Map<string, number> {
+   console.log(options);
+   
    options = { ...DEF_FREQUENCY_OPTIONS, ...options || {} };
    text = prepareText(text, options);
 

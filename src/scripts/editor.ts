@@ -7,8 +7,8 @@ interface IEditorElements {
 }
 
 export default class Editor {
-   private MAX_HIGHLIGHT_LEN = 10000;
-   private MAX_LIVE_HIGHLIGHT_LEN = 2000;
+   private MAX_HIGHLIGHT_LEN = 5000;
+   private MAX_LIVE_HIGHLIGHT_LEN = 1000;
 
    private _value = '';
    private $: IEditorElements = {};

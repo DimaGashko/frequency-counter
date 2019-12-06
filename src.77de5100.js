@@ -339,145 +339,7 @@ var reloadCSS = require('_css_loader');
 
 module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
-},{"_css_loader":"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"scripts/algorithms/char-frequency/_calc-frequency.ts":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-function _calcFrequency(arr) {
-  var charsMap = new Map();
-  var frequencyMap = new Map();
-  arr.forEach(function (char) {
-    if (charsMap.has(char)) {
-      charsMap.set(char, charsMap.get(char) + 1);
-    } else {
-      charsMap.set(char, 1);
-    }
-  });
-  charsMap.forEach(function (value, key) {
-    frequencyMap.set(key, value / arr.length);
-  });
-  return frequencyMap;
-}
-
-exports.default = _calcFrequency;
-},{}],"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts":[function(require,module,exports) {
-"use strict";
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _calc_frequency_1 = __importDefault(require("./_calc-frequency"));
-/**
- * Calculate frequency of two-character sequences in the text
- * @param text
- * @returns map of two-character sequences and its frequency (in range [0, 1])
- */
-
-
-function calcCharPairFrequency(text) {
-  text = text.toLowerCase().replace(/[^a-zа-яёїієґ]+/g, '');
-  var pairs = toPairs(text);
-  return {
-    map: _calc_frequency_1.default(pairs),
-    len: pairs.length
-  };
-}
-
-exports.default = calcCharPairFrequency;
-
-function toPairs(text) {
-  var chars = text.split('');
-  var pairs = [];
-  var len = chars.length;
-
-  for (var i = 0; i < len - 1; i++) {
-    pairs.push(chars[i] + chars[i + 1]);
-  }
-
-  return pairs;
-}
-},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"scripts/algorithms/char-frequency/calc-char-frequency.ts":[function(require,module,exports) {
-"use strict";
-
-var __assign = this && this.__assign || function () {
-  __assign = Object.assign || function (t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-      s = arguments[i];
-
-      for (var p in s) {
-        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
-      }
-    }
-
-    return t;
-  };
-
-  return __assign.apply(this, arguments);
-};
-
-var __importDefault = this && this.__importDefault || function (mod) {
-  return mod && mod.__esModule ? mod : {
-    "default": mod
-  };
-};
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _calc_frequency_1 = __importDefault(require("./_calc-frequency"));
-
-var DEF_FREQUENCY_OPTIONS = {
-  ignoreCase: true,
-  spaces: false,
-  digits: false,
-  punctuation: false
-};
-/**
- * Calculate character frequency in the text
- * @param text
- * @param options
- * @returns map of characters and character frequency (in range [0, 1])
- */
-
-function calcCharFrequency(text, options) {
-  options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options || {});
-  text = prepareText(text, options);
-  return {
-    map: _calc_frequency_1.default(text.split('')),
-    len: text.length
-  };
-}
-
-exports.default = calcCharFrequency;
-
-function prepareText(text, options) {
-  var ignoreCase = options.ignoreCase,
-      spaces = options.spaces,
-      digits = options.digits,
-      punctuation = options.punctuation;
-  text = text.trim();
-  if (ignoreCase) text = text.toLowerCase();
-  if (!spaces) text = text.replace(/\s+/g, '');
-  if (!digits) text = text.replace(/\d+/g, '');
-
-  if (!punctuation) {
-    text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()]+/g, '');
-  }
-
-  return text;
-}
-},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"scripts/Events.ts":[function(require,module,exports) {
+},{"_css_loader":"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/css-loader.js"}],"scripts/Events.ts":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21440,7 +21302,243 @@ return src;
 
 })));
 
-},{"moment":"../node_modules/moment/moment.js"}],"index.ts":[function(require,module,exports) {
+},{"moment":"../node_modules/moment/moment.js"}],"scripts/algorithms/char-frequency/_calc-frequency.ts":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _calcFrequency(arr) {
+  var charsMap = new Map();
+  var frequencyMap = new Map();
+  arr.forEach(function (char) {
+    if (charsMap.has(char)) {
+      charsMap.set(char, charsMap.get(char) + 1);
+    } else {
+      charsMap.set(char, 1);
+    }
+  });
+  charsMap.forEach(function (value, key) {
+    frequencyMap.set(key, value / arr.length);
+  });
+  return frequencyMap;
+}
+
+exports.default = _calcFrequency;
+},{}],"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _calc_frequency_1 = __importDefault(require("./_calc-frequency"));
+/**
+ * Calculate frequency of two-character sequences in the text
+ * @param text
+ * @returns map of two-character sequences and its frequency (in range [0, 1])
+ */
+
+
+function calcCharPairFrequency(text) {
+  text = text.toLowerCase().replace(/[^a-zа-яёїієґ]+/g, '');
+  var pairs = toPairs(text);
+  return {
+    map: _calc_frequency_1.default(pairs),
+    len: pairs.length
+  };
+}
+
+exports.default = calcCharPairFrequency;
+
+function toPairs(text) {
+  var chars = text.split('');
+  var pairs = [];
+  var len = chars.length;
+
+  for (var i = 0; i < len - 1; i++) {
+    pairs.push(chars[i] + chars[i + 1]);
+  }
+
+  return pairs;
+}
+},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"scripts/algorithms/char-frequency/calc-char-frequency.ts":[function(require,module,exports) {
+"use strict";
+
+var __assign = this && this.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+
+      for (var p in s) {
+        if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+      }
+    }
+
+    return t;
+  };
+
+  return __assign.apply(this, arguments);
+};
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _calc_frequency_1 = __importDefault(require("./_calc-frequency"));
+
+var DEF_FREQUENCY_OPTIONS = {
+  ignoreCase: true,
+  spaces: false,
+  digits: false,
+  punctuation: false
+};
+/**
+ * Calculate character frequency in the text
+ * @param text
+ * @param options
+ * @returns map of characters and character frequency (in range [0, 1])
+ */
+
+function calcCharFrequency(text, options) {
+  options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options || {});
+  text = prepareText(text, options);
+  return {
+    map: _calc_frequency_1.default(text.split('')),
+    len: text.length
+  };
+}
+
+exports.default = calcCharFrequency;
+
+function prepareText(text, options) {
+  var ignoreCase = options.ignoreCase,
+      spaces = options.spaces,
+      digits = options.digits,
+      punctuation = options.punctuation;
+  text = text.trim();
+  if (ignoreCase) text = text.toLowerCase();
+  if (!spaces) text = text.replace(/\s+/g, '');
+  if (!digits) text = text.replace(/\d+/g, '');
+
+  if (!punctuation) {
+    text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()]+/g, '');
+  }
+
+  return text;
+}
+},{"./_calc-frequency":"scripts/algorithms/char-frequency/_calc-frequency.ts"}],"scripts/Frequency.ts":[function(require,module,exports) {
+"use strict";
+
+var __importDefault = this && this.__importDefault || function (mod) {
+  return mod && mod.__esModule ? mod : {
+    "default": mod
+  };
+};
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var calc_char_pair_frequency_1 = __importDefault(require("./algorithms/char-frequency/calc-char-pair-frequency"));
+
+var calc_char_frequency_1 = __importDefault(require("./algorithms/char-frequency/calc-char-frequency"));
+
+var Frequency =
+/** @class */
+function () {
+  function Frequency() {
+    this.charColors = new Map();
+    this.pairColors = new Map();
+    this.mostFrequentChar = {
+      key: '',
+      val: 0
+    };
+    this.mostFrequentPair = {
+      key: '',
+      val: 0
+    };
+  }
+
+  Frequency.prototype.update = function (text, options) {
+    this.char = calc_char_frequency_1.default(text, options);
+    this.pair = calc_char_pair_frequency_1.default(text);
+    this.updateMostFrequentChar();
+    this.updateMostFrequentPair();
+    this.updateCharColors();
+    this.updatePairColors();
+  };
+
+  ;
+
+  Frequency.prototype.updateCharColors = function () {
+    var _this = this;
+
+    this.charColors.clear();
+    this.char.map.forEach(function (val, key) {
+      var r = val * 255 / _this.mostFrequentChar.val;
+
+      _this.charColors.set(key, "rgb(" + r + ",0,0)");
+    });
+  };
+
+  Frequency.prototype.updatePairColors = function () {
+    var _this = this;
+
+    this.pairColors.clear();
+    this.pair.map.forEach(function (val, key) {
+      var g = val * 255 / _this.mostFrequentPair.val;
+
+      _this.pairColors.set(key, "rgb(0," + g + ",0)");
+    });
+  };
+
+  Frequency.prototype.updateMostFrequentChar = function () {
+    var _this = this;
+
+    this.mostFrequentChar = {
+      key: '',
+      val: 0
+    };
+    this.char.map.forEach(function (val, key) {
+      if (_this.mostFrequentChar.val >= val) return;
+      _this.mostFrequentChar.val = val;
+      _this.mostFrequentChar.key = key;
+    });
+  };
+
+  Frequency.prototype.updateMostFrequentPair = function () {
+    var _this = this;
+
+    this.mostFrequentPair = {
+      key: '',
+      val: 0
+    };
+    this.pair.map.forEach(function (val, key) {
+      if (_this.mostFrequentPair.val >= val) return;
+      _this.mostFrequentPair.val = val;
+      _this.mostFrequentPair.key = key;
+    });
+  };
+
+  return Frequency;
+}();
+
+exports.default = Frequency;
+},{"./algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts"}],"index.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -21459,13 +21557,11 @@ require("normalize.scss/normalize.scss");
 
 require("./index.scss");
 
-var calc_char_pair_frequency_1 = __importDefault(require("./scripts/algorithms/char-frequency/calc-char-pair-frequency"));
-
-var calc_char_frequency_1 = __importDefault(require("./scripts/algorithms/char-frequency/calc-char-frequency"));
-
 var Editor_1 = __importDefault(require("./scripts/Editor"));
 
 var chart_js_1 = __importDefault(require("chart.js"));
+
+var Frequency_1 = __importDefault(require("./scripts/Frequency"));
 
 var $ = {};
 $.root = document.querySelector('.app');
@@ -21478,6 +21574,7 @@ var $frequencyChart = $.root.querySelector('.app-res__frequency-chart');
 var $pairsFrequencyChart = $.root.querySelector('.app-res__pairs-frequency-chart');
 var frequencyChartCtx = $frequencyChart.getContext('2d');
 var pairsFrequencyChartCtx = $pairsFrequencyChart.getContext('2d');
+var frequency = new Frequency_1.default();
 var editor = new Editor_1.default($.editor);
 var chartOptions = {
   maintainAspectRatio: false,
@@ -21485,15 +21582,10 @@ var chartOptions = {
     display: false
   }
 };
-var frequency = null;
-var pairsFrequency = null;
-var text = '';
-var maxFrequency = 1;
 var frequencyChart = null;
 var run = throttle_debounce_1.debounce(500, function () {
-  text = editor.getText();
   updateFrequency();
-  updateColors();
+  editor.setHighlightMap(frequency.charColors);
   updateSummary();
   updateFrequencyChart();
 });
@@ -21519,47 +21611,18 @@ function initEvents() {
 }
 
 function updateFrequency() {
-  frequency = calc_char_frequency_1.default(text, {
+  frequency.update(editor.getText(), {
     ignoreCase: toolbarForm.case.checked,
     spaces: !toolbarForm.spaces.checked,
     digits: !toolbarForm.digits.checked,
     punctuation: !toolbarForm.punctuation.checked
   });
-  pairsFrequency = calc_char_pair_frequency_1.default(text);
-}
-
-function updateColors() {
-  var highlightMap = frequencyToHighlightMap(frequency.map);
-  editor.setHighlightMap(highlightMap);
 }
 
 function updateSummary() {
-  $.total.innerHTML = frequency.len + '';
-  $.uniqueChars.innerHTML = frequency.map.size + '';
-  $.uniquePairs.innerHTML = pairsFrequency.map.size + '';
-}
-
-function frequencyToHighlightMap(frequency) {
-  var highlightMap = new Map();
-  maxFrequency = getMostFrequent(frequency).val;
-  frequency.forEach(function (value, key) {
-    highlightMap.set(key, "rgb(" + value * 255 / maxFrequency + ",0,0)");
-  });
-  return highlightMap;
-}
-
-function getMostFrequent(frequency) {
-  var val = 0;
-  var key = null;
-  frequency.forEach(function (curVal, curKey) {
-    if (val >= curVal) return;
-    val = curVal;
-    key = curKey;
-  });
-  return {
-    val: val,
-    key: key
-  };
+  $.total.innerHTML = frequency.char.len + '';
+  $.uniqueChars.innerHTML = frequency.char.map.size + '';
+  $.uniquePairs.innerHTML = frequency.pair.map.size + '';
 }
 
 function formatValue(value) {
@@ -21568,7 +21631,7 @@ function formatValue(value) {
 
 function updateFrequencyChart() {
   console.log('hi');
-  var entries = Array.from(frequency.map.entries());
+  var entries = Array.from(frequency.char.map.entries());
   entries.sort(function (a, b) {
     return b[1] - a[1];
   });
@@ -21597,7 +21660,7 @@ function updateFrequencyChart() {
           var dataIndex = _a.dataIndex,
               dataset = _a.dataset;
           var val = dataset.data[dataIndex];
-          return "rgb(" + val * 255 / maxFrequency / 100 + ",0,0)";
+          return "rgb(" + val * 255 / frequency.mostFrequentChar.val / 100 + ",0,0)";
         },
         data: data
       }]
@@ -21605,7 +21668,7 @@ function updateFrequencyChart() {
     options: chartOptions
   });
 }
-},{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/Editor":"scripts/Editor.ts","chart.js":"../node_modules/chart.js/dist/Chart.js"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/Editor":"scripts/Editor.ts","chart.js":"../node_modules/chart.js/dist/Chart.js","./scripts/Frequency":"scripts/Frequency.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -21633,7 +21696,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43153" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33571" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

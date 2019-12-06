@@ -21,3 +21,13 @@ Check it out: https://dimagashko.github.io/frequency-counter
 - Parsel
 - Chart.js
 - Mobile First
+
+## Build
+
+```bash
+npm i
+npm start
+npm run build
+```
+
+p.s. you should use yarn if you want to contribute to this repo

@@ -4,7 +4,7 @@ Type any text and see character frequency of that text
 
 Check it out: https://dimagashko.github.io/frequency-counter
 
-![Screenshot](./src/img/frequency-counter.png)
+![Screenshot](./src/img/frequency-counter.jpg)
 
 ## Features
 

@@ -17,6 +17,7 @@ export default class Editor {
 
    private _highlight = false;
    private _highlightMap: Map<string, string> = new Map();
+   private _highlightIgnoreCase = false;
 
    public events = new Events();
 
@@ -111,13 +112,14 @@ export default class Editor {
       }
 
       this.$.decText.innerHTML = this._value.split('').map((item, i) => {
+         const map = this._highlightMap;
          item = this.escape(item);
 
-         if (!this._highlightMap.has(item)) {
+         if (!map.has(item) && !map.has(item.toLowerCase())) {
             return item;
          }
 
-         const color = this._highlightMap.get(item);
+         const color = map.get(item) || map.get(item.toLowerCase());
          return `<span style="color: ${color}">${item}</span>`;
       }).join('');
    }

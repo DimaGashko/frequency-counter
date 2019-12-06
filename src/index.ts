@@ -41,7 +41,21 @@ function run() {
         punctuation: !toolbarForm.punctuation,
     });
     
-    console.log(frequency);
+    const highlightMap = frequencyToHighlightMap(frequency);
+    editor.setHighlightMap(highlightMap);
+}
+
+function frequencyToHighlightMap(frequency: Map<string, number>) {
+    const highlightMap: Map<string, string> = new Map();
+
+    frequency.forEach((value, key) => {
+        const color = Math.round((value * 0xFFFFFF))
+            .toString(16).padStart(6, '0');
+        
+        highlightMap.set(key, `#${color}`);
+    });
+
+    return highlightMap;
 }
 
 (<any>window).calcCharFrequency = calcCharFrequency; 

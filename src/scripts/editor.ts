@@ -15,6 +15,7 @@ export default class Editor {
    private _decTextUpdatingFrame = 0;
 
    private _highlight = false;
+   private _highlightMap: Map<string, string> = new Map();
 
    constructor(private root: HTMLElement) {
       this.init();
@@ -33,6 +34,11 @@ export default class Editor {
 
       const type = (val) ? 'remove' : 'add';
       this.root.classList[type]('app-editor--no-highlight');
+   }
+
+   public setHighlightMap(highlightMap: Map<string, string>) {
+      this._highlightMap = highlightMap;
+      this.updateDecText();
    }
 
    public getText() {
@@ -82,7 +88,7 @@ export default class Editor {
       cancelAnimationFrame(this._decTextUpdatingFrame);
       this._decTextUpdatingFrame = 0;
    }
- 
+
    private readRealText() {
       this._value = this.$.realText.value;
       this.updateDecText();
@@ -98,10 +104,16 @@ export default class Editor {
          this.$.decText.innerHTML = this._value;
          return;
       }
-      console.log(this._value);
+
       this.$.decText.innerHTML = this._value.split('').map((item, i) => {
          item = this.escape(item);
-         return (i % 2 && 0) ? `<span style="color: red">${item}</span>` : item;
+
+         if (!this._highlightMap.has(item)) {
+            return item;
+         }
+
+         const color = this._highlightMap.get(item);
+         return `<span style="color: ${color}">${item}</span>`;
       }).join('');
    }
 

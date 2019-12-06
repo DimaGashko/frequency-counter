@@ -12,7 +12,7 @@ export default function _calcFrequency(arr: any[]): Map<string, number> {
    });
 
    charsMap.forEach((value, key) => {
-      frequencyMap[key] = value / arr.length;
+      frequencyMap.set(key, value / arr.length);
    });
 
    return frequencyMap;

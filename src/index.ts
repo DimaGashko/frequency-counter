@@ -16,23 +16,35 @@ $.uniquePairs = $.root.querySelector('.app-res__unique-pairs')
 
 const toolbarForm: HTMLFormElement = $.root.querySelector('.app-toolbar__form');
 
-const frequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__frequency-chart');
-const pairsFrequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__pairs-frequency-chart');
+const $frequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__frequency-chart');
+const $pairsFrequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__pairs-frequency-chart');
 
-const frequencyChartCtx = frequencyChart.getContext('2d');
-const pairsFrequencyChartCtx = pairsFrequencyChart.getContext('2d');
+const frequencyChartCtx = $frequencyChart.getContext('2d');
+const pairsFrequencyChartCtx = $pairsFrequencyChart.getContext('2d');
 
 const editor = new Editor($.editor);
+
+const chartOptions: Chart.ChartOptions = {
+    maintainAspectRatio: false,
+    legend: {
+        display: false,
+    }
+}
 
 let frequency: ICharFrequency = null;
 let pairsFrequency: ICharPairsFrequency = null;
 let text = '';
+
+let maxFrequency = 1;
+
+let frequencyChart = null;
 
 const run = debounce(500, () => {
     text = editor.getText();
     updateFrequency();
     updateColors();
     updateSummary();
+    updateFrequencyChart();
 });
 
 init();
@@ -82,7 +94,7 @@ function updateSummary() {
 
 function frequencyToHighlightMap(frequency: Map<string, number>) {
     const highlightMap: Map<string, string> = new Map();
-    const maxFrequency = getMostFrequent(frequency).val;
+    maxFrequency = getMostFrequent(frequency).val;
 
     frequency.forEach((value, key) => {
         highlightMap.set(key, `rgb(${value * 255 / maxFrequency},0,0)`);
@@ -105,33 +117,38 @@ function getMostFrequent(frequency: Map<string, number>) {
     return { val, key };
 }
 
-var myChart = new Chart(frequencyChartCtx, {
-    type: 'bar',
-    data: { 
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
-        datasets: [{
-            label: '# of Votes',
-            data: [12, 19, 3, 5, 2, 3,1,2,3,4],
-            backgroundColor: [
-                'rgba(255, 99, 132, 2)',
-                'rgba(54, 162, 235, 2)',
-                'rgba(255, 206, 86, 2)',
-                'rgba(75, 192, 192, 2)',
-                'rgba(153, 102, 255, 2)',
-                'rgba(255, 159, 64, 2)'
-            ],
-        }]
-    },
-    options: {
-        maintainAspectRatio: false,
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+function formatValue(value: number) {
+    return +(value * 100).toFixed(2);
+}
 
-myChart.update
+function updateFrequencyChart() {
+    console.log('hi');
+
+    const entries = Array.from(frequency.map.entries());
+    entries.sort((a, b) => b[1] - a[1]);
+
+    const labels = entries.map(e => e[0]);
+    const data = entries.map(e => e[1]).map(v => formatValue(v));
+
+    if (frequencyChart) {
+        frequencyChart.data.labels = labels;
+        frequencyChart.data.datasets[0].data = data;
+        frequencyChart.update();
+        return;
+    }
+
+    frequencyChart = new Chart(frequencyChartCtx, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                backgroundColor: ({ dataIndex, dataset }) => {
+                    const val = <number>dataset.data[dataIndex];
+                    return `rgb(${val * 255 / maxFrequency/ 100},0,0)`;
+                },
+                data,
+            }]
+        },
+        options: chartOptions,
+    });
+}

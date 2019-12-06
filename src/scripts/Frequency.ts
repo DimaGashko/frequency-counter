@@ -1,7 +1,10 @@
 import calcCharPairsFrequency, { ICharPairsFrequency } from './algorithms/char-frequency/calc-char-pair-frequency';
 import calcCharFrequency, { ICharFrequency, ICharFrequencyOptions } from './algorithms/char-frequency/calc-char-frequency';
+import Events from './Events';
 
 export default class Frequency {
+   public events = new Events();
+
    public char: ICharFrequency;
    public pair: ICharPairsFrequency;
 
@@ -20,6 +23,8 @@ export default class Frequency {
 
       this.updateCharColors();
       this.updatePairColors();
+
+      this.events.emit('update');
    };
 
    private updateCharColors() {

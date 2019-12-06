@@ -1,15 +1,23 @@
 import _calcFrequency from "./_calc-frequency";
 
+export interface ICharPairsFrequency {
+   map: Map<string, number>;
+   len: number;
+}
+
 /**
  * Calculate frequency of two-character sequences in the text
  * @param text
  * @returns map of two-character sequences and its frequency (in range [0, 1])
  */
-export default function calcCharPairFrequency(text: string): Map<string, number> {
+export default function calcCharPairFrequency(text: string): ICharPairsFrequency {
    text = text.toLowerCase().replace(/[^a-zа-яёїієґ]+/g, '');
    const pairs = toPairs(text);
 
-   return _calcFrequency(pairs);
+   return {
+      map: _calcFrequency(pairs),
+      len: pairs.length,
+   }
 }
 
 function toPairs(text: string): string[] {

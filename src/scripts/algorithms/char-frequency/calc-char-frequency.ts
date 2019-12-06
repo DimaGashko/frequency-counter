@@ -1,5 +1,10 @@
 import _calcFrequency from "./_calc-frequency";
 
+export interface ICharFrequency {
+   map: Map<string, number>;
+   len: number;
+}
+
 interface IFrequencyOptions {
    ignoreCase?: boolean;
    spaces?: boolean;
@@ -20,13 +25,14 @@ const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
  * @param options
  * @returns map of characters and character frequency (in range [0, 1])
  */
-export default function calcCharFrequency(text: string, options?: IFrequencyOptions): Map<string, number> {
-   console.log(options);
-   
+export default function calcCharFrequency(text: string, options?: IFrequencyOptions): ICharFrequency {   
    options = { ...DEF_FREQUENCY_OPTIONS, ...options || {} };
    text = prepareText(text, options);
 
-   return _calcFrequency(text.split(''));
+   return {
+      map: _calcFrequency(text.split('')),
+      len: text.length,
+   }
 }
 
 function prepareText(text: string, options: IFrequencyOptions): string {

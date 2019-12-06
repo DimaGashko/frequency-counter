@@ -387,7 +387,10 @@ var _calc_frequency_1 = __importDefault(require("./_calc-frequency"));
 function calcCharPairFrequency(text) {
   text = text.toLowerCase().replace(/[^a-zа-яёїієґ]+/g, '');
   var pairs = toPairs(text);
-  return _calc_frequency_1.default(pairs);
+  return {
+    map: _calc_frequency_1.default(pairs),
+    len: pairs.length
+  };
 }
 
 exports.default = calcCharPairFrequency;
@@ -448,10 +451,12 @@ var DEF_FREQUENCY_OPTIONS = {
  */
 
 function calcCharFrequency(text, options) {
-  console.log(options);
   options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options || {});
   text = prepareText(text, options);
-  return _calc_frequency_1.default(text.split(''));
+  return {
+    map: _calc_frequency_1.default(text.split('')),
+    len: text.length
+  };
 }
 
 exports.default = calcCharFrequency;
@@ -519,7 +524,7 @@ function () {
 }();
 
 exports.default = Events;
-},{}],"scripts/editor.ts":[function(require,module,exports) {
+},{}],"scripts/Editor.ts":[function(require,module,exports) {
 "use strict";
 
 var __importDefault = this && this.__importDefault || function (mod) {
@@ -548,7 +553,6 @@ function () {
     this._decTextUpdatingFrame = 0;
     this._highlight = false;
     this._highlightMap = new Map();
-    this._highlightIgnoreCase = false;
     this.events = new Events_1.default();
     this.init();
   }
@@ -698,25 +702,24 @@ var calc_char_pair_frequency_1 = __importDefault(require("./scripts/algorithms/c
 
 var calc_char_frequency_1 = __importDefault(require("./scripts/algorithms/char-frequency/calc-char-frequency"));
 
-var editor_1 = __importDefault(require("./scripts/editor"));
+var Editor_1 = __importDefault(require("./scripts/Editor"));
 
 var $ = {};
 $.root = document.querySelector('.app');
 $.editor = $.root.querySelector('.app-editor');
+$.total = $.root.querySelector('.app-res__total');
+$.uniqueChars = $.root.querySelector('.app-res__unique-chars');
+$.uniquePairs = $.root.querySelector('.app-res__unique-pairs');
 var toolbarForm = $.root.querySelector('.app-toolbar__form');
-var editor = new editor_1.default($.editor);
-var run = throttle_debounce_1.debounce(500, function run() {
-  var text = editor.getText();
-  var frequency = calc_char_frequency_1.default(text, {
-    ignoreCase: toolbarForm.case.checked,
-    spaces: !toolbarForm.spaces.checked,
-    digits: !toolbarForm.digits.checked,
-    punctuation: !toolbarForm.punctuation.checked
-  });
-  var highlightMap = frequencyToHighlightMap(frequency);
-  editor.setHighlightMap(highlightMap);
-  console.log(frequency);
-  console.log(highlightMap);
+var editor = new Editor_1.default($.editor);
+var frequency = null;
+var pairsFrequency = null;
+var text = '';
+var run = throttle_debounce_1.debounce(500, function () {
+  text = editor.getText();
+  updateFrequency();
+  updateColors();
+  updateSummary();
 });
 init();
 initEvents();
@@ -737,6 +740,27 @@ function initEvents() {
   toolbarForm.spaces.addEventListener('change', run);
   toolbarForm.digits.addEventListener('change', run);
   toolbarForm.punctuation.addEventListener('change', run);
+}
+
+function updateFrequency() {
+  frequency = calc_char_frequency_1.default(text, {
+    ignoreCase: toolbarForm.case.checked,
+    spaces: !toolbarForm.spaces.checked,
+    digits: !toolbarForm.digits.checked,
+    punctuation: !toolbarForm.punctuation.checked
+  });
+  pairsFrequency = calc_char_pair_frequency_1.default(text);
+}
+
+function updateColors() {
+  var highlightMap = frequencyToHighlightMap(frequency.map);
+  editor.setHighlightMap(highlightMap);
+}
+
+function updateSummary() {
+  $.total.innerHTML = frequency.len + '';
+  $.uniqueChars.innerHTML = frequency.map.size + '';
+  $.uniquePairs.innerHTML = pairsFrequency.map.size + '';
 }
 
 function frequencyToHighlightMap(frequency) {
@@ -761,10 +785,7 @@ function getMostFrequent(frequency) {
     key: key
   };
 }
-
-window.calcCharFrequency = calc_char_frequency_1.default;
-window.calcCharPairFrequency = calc_char_pair_frequency_1.default;
-},{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/editor":"scripts/editor.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/Editor":"scripts/Editor.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -792,7 +813,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43145" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43153" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

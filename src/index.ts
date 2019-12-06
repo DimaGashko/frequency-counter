@@ -2,33 +2,30 @@ import { debounce } from 'throttle-debounce';
 import 'normalize.scss/normalize.scss';
 import './index.scss';
 
-import calcCharPairFrequency from './scripts/algorithms/char-frequency/calc-char-pair-frequency';
-import calcCharFrequency from './scripts/algorithms/char-frequency/calc-char-frequency';
-import Editor from './scripts/editor';
+import calcCharPairFrequency, { ICharPairsFrequency } from './scripts/algorithms/char-frequency/calc-char-pair-frequency';
+import calcCharFrequency, { ICharFrequency } from './scripts/algorithms/char-frequency/calc-char-frequency';
+import Editor from './scripts/Editor';
 
 const $: { [type: string]: HTMLElement } = {};
 $.root = document.querySelector('.app');
 $.editor = $.root.querySelector('.app-editor')
+$.total = $.root.querySelector('.app-res__total');
+$.uniqueChars = $.root.querySelector('.app-res__unique-chars');
+$.uniquePairs = $.root.querySelector('.app-res__unique-pairs')
 
 const toolbarForm: HTMLFormElement = $.root.querySelector('.app-toolbar__form');
 
 const editor = new Editor($.editor);
 
-const run = debounce(500, function run() {
-    const text = editor.getText();
+let frequency: ICharFrequency = null;
+let pairsFrequency: ICharPairsFrequency = null;
+let text = '';
 
-    const frequency = calcCharFrequency(text, {
-        ignoreCase: toolbarForm.case.checked,
-        spaces: !toolbarForm.spaces.checked,
-        digits: !toolbarForm.digits.checked,
-        punctuation: !toolbarForm.punctuation.checked,
-    });
-
-    const highlightMap = frequencyToHighlightMap(frequency);
-    editor.setHighlightMap(highlightMap);
-
-    console.log(frequency)
-    console.log(highlightMap);
+const run = debounce(500, () => {
+    text = editor.getText();
+    updateFrequency();
+    updateColors();
+    updateSummary();
 });
 
 init();
@@ -52,6 +49,28 @@ function initEvents() {
     toolbarForm.spaces.addEventListener('change', run);
     toolbarForm.digits.addEventListener('change', run);
     toolbarForm.punctuation.addEventListener('change', run);
+}
+
+function updateFrequency() {
+    frequency = calcCharFrequency(text, {
+        ignoreCase: toolbarForm.case.checked,
+        spaces: !toolbarForm.spaces.checked,
+        digits: !toolbarForm.digits.checked,
+        punctuation: !toolbarForm.punctuation.checked,
+    });
+
+    pairsFrequency = calcCharPairFrequency(text);
+}
+
+function updateColors() {
+    const highlightMap = frequencyToHighlightMap(frequency.map);
+    editor.setHighlightMap(highlightMap);
+}
+
+function updateSummary() {
+    $.total.innerHTML = frequency.len + '';
+    $.uniqueChars.innerHTML = frequency.map.size + '';
+    $.uniquePairs.innerHTML = pairsFrequency.map.size + '';
 }
 
 function frequencyToHighlightMap(frequency: Map<string, number>) {
@@ -78,6 +97,3 @@ function getMostFrequent(frequency: Map<string, number>) {
 
     return { val, key };
 }
-
-(<any>window).calcCharFrequency = calcCharFrequency;
-(<any>window).calcCharPairFrequency = calcCharPairFrequency; 

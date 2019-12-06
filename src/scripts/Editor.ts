@@ -17,7 +17,6 @@ export default class Editor {
 
    private _highlight = false;
    private _highlightMap: Map<string, string> = new Map();
-   private _highlightIgnoreCase = false;
 
    public events = new Events();
 

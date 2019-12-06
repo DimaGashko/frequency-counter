@@ -1,3 +1,4 @@
+import { debounce } from 'throttle-debounce';
 import 'normalize.scss/normalize.scss';
 import './index.scss';
 
@@ -5,7 +6,7 @@ import calcCharPairFrequency from './scripts/algorithms/char-frequency/calc-char
 import calcCharFrequency from './scripts/algorithms/char-frequency/calc-char-frequency';
 import Editor from './scripts/editor';
 
-const $: {[type: string]: HTMLElement} = {};
+const $: { [type: string]: HTMLElement } = {};
 $.root = document.querySelector('.app');
 $.editor = $.root.querySelector('.app-editor')
 
@@ -20,7 +21,11 @@ function init() {
     editor.setHighlight(toolbarForm.highlight.checked);
 }
 
-function initEvents() { 
+function initEvents() {
+    editor.events.addListener('input', () => {
+        run();
+    });
+
     toolbarForm.highlight.addEventListener('change', () => {
         editor.setHighlight(toolbarForm.highlight.checked);
     });
@@ -31,7 +36,7 @@ function initEvents() {
     toolbarForm.punctuation.addEventListener('change', run);
 }
 
-function run() {
+const run = debounce(500, function run() {
     const text = editor.getText();
 
     const frequency = calcCharFrequency(text, {
@@ -40,23 +45,38 @@ function run() {
         digits: !toolbarForm.digits,
         punctuation: !toolbarForm.punctuation,
     });
-    
+
     const highlightMap = frequencyToHighlightMap(frequency);
     editor.setHighlightMap(highlightMap);
-}
+
+    console.log(frequency)
+    console.log(highlightMap);
+});
 
 function frequencyToHighlightMap(frequency: Map<string, number>) {
     const highlightMap: Map<string, string> = new Map();
+    const maxFrequency = getMostFrequent(frequency).val;
 
     frequency.forEach((value, key) => {
-        const color = Math.round((value * 0xFFFFFF))
-            .toString(16).padStart(6, '0');
-        
-        highlightMap.set(key, `#${color}`);
+        highlightMap.set(key, `rgb(${value * 255 / maxFrequency},0,0)`);
     });
 
     return highlightMap;
 }
 
-(<any>window).calcCharFrequency = calcCharFrequency; 
+function getMostFrequent(frequency: Map<string, number>) {
+    let val = 0;
+    let key = null;
+
+    frequency.forEach((curVal, curKey) => {
+        if (val >= curVal) return;
+
+        val = curVal;
+        key = curKey;
+    });
+
+    return { val, key };
+}
+
+(<any>window).calcCharFrequency = calcCharFrequency;
 (<any>window).calcCharPairFrequency = calcCharPairFrequency; 

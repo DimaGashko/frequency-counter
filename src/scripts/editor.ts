@@ -1,4 +1,5 @@
 import { throttle } from 'throttle-debounce';
+import Events from './Events';
 
 interface IEditorElements {
    [name: string]: HTMLElement,
@@ -16,6 +17,8 @@ export default class Editor {
 
    private _highlight = false;
    private _highlightMap: Map<string, string> = new Map();
+
+   public events = new Events();
 
    constructor(private root: HTMLElement) {
       this.init();
@@ -66,6 +69,8 @@ export default class Editor {
          this.stopDecTextUpdating();
          this.updateDecTextScrolls();
          this.readRealText();
+
+         this.events.emit('input');
       }));
 
       this.$.realText.addEventListener('scroll', () => {

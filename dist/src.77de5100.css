@@ -509,7 +509,7 @@ body {
 
 .app-editor {
   position: relative;
-  margin-left: 0.5em;
+  margin-left: 0.2em;
 }
 .app-editor--no-highlight .app-editor__dec-text {
   display: none;
@@ -521,7 +521,7 @@ body {
   position: absolute;
   left: 0;
   top: 0;
-  width: calc(100% - 0.5em);
+  width: calc(100% - 0.2em);
   height: 100%;
   padding: 0.5em;
   padding-right: 0.5em;

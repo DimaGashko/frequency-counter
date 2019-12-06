@@ -213,7 +213,7 @@ function _calcFrequency(arr) {
     }
   });
   charsMap.forEach(function (value, key) {
-    frequencyMap[key] = value / arr.length;
+    frequencyMap.set(key, value / arr.length);
   });
   return frequencyMap;
 }
@@ -491,6 +491,7 @@ function () {
     this.$ = {};
     this._decTextUpdatingFrame = 0;
     this._highlight = false;
+    this._highlightMap = new Map();
     this.init();
   }
 
@@ -506,6 +507,11 @@ function () {
     this.updateDecText();
     var type = val ? 'remove' : 'add';
     this.root.classList[type]('app-editor--no-highlight');
+  };
+
+  Editor.prototype.setHighlightMap = function (highlightMap) {
+    this._highlightMap = highlightMap;
+    this.updateDecText();
   };
 
   Editor.prototype.getText = function () {
@@ -579,10 +585,16 @@ function () {
       return;
     }
 
-    console.log(this._value);
     this.$.decText.innerHTML = this._value.split('').map(function (item, i) {
       item = _this.escape(item);
-      return i % 2 && 0 ? "<span style=\"color: red\">" + item + "</span>" : item;
+
+      if (!_this._highlightMap.has(item)) {
+        return item;
+      }
+
+      var color = _this._highlightMap.get(item);
+
+      return "<span style=\"color: " + color + "\">" + item + "</span>";
     }).join('');
   };
 
@@ -656,7 +668,17 @@ function run() {
     digits: !toolbarForm.digits,
     punctuation: !toolbarForm.punctuation
   });
-  console.log(frequency);
+  var highlightMap = frequencyToHighlightMap(frequency);
+  editor.setHighlightMap(highlightMap);
+}
+
+function frequencyToHighlightMap(frequency) {
+  var highlightMap = new Map();
+  frequency.forEach(function (value, key) {
+    var color = Math.round(value * 0xFFFFFF).toString(16).padStart(6, '0');
+    highlightMap.set(key, "#" + color);
+  });
+  return highlightMap;
 }
 
 window.calcCharFrequency = calc_char_frequency_1.default;

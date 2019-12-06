@@ -45,7 +45,7 @@ function prepareText(text: string, options: ICharFrequencyOptions): string {
    if (!digits) text = text.replace(/\d+/g, '');
 
    if (!punctuation) {
-      text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()]+/g, '');
+      text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()\[\]]+/g, '');
    }
 
    return text;

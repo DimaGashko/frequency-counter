@@ -674,7 +674,7 @@ function prepareText(text, options) {
   if (!digits) text = text.replace(/\d+/g, '');
 
   if (!punctuation) {
-    text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()]+/g, '');
+    text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()\[\]]+/g, '');
   }
 
   return text;
@@ -732,9 +732,9 @@ function () {
 
     this.charColors.clear();
     this.char.map.forEach(function (val, key) {
-      var r = val * 255 / _this.mostFrequentChar.val;
+      var v = val * 255 / _this.mostFrequentChar.val;
 
-      _this.charColors.set(key, "rgb(" + r + ",0,0)");
+      _this.charColors.set(key, "rgb(" + v + ",0,0)");
     });
   };
 
@@ -743,9 +743,9 @@ function () {
 
     this.pairColors.clear();
     this.pair.map.forEach(function (val, key) {
-      var g = val * 255 / _this.mostFrequentPair.val;
+      var v = val * 255 / _this.mostFrequentPair.val;
 
-      _this.pairColors.set(key, "rgb(0," + g + ",0)");
+      _this.pairColors.set(key, "rgb(" + v + ",0,0)");
     });
   };
 
@@ -21624,7 +21624,36 @@ function () {
     });
   };
 
-  Res.prototype.updatePairChart = function () {};
+  Res.prototype.updatePairChart = function () {
+    var _a = this.frequency,
+        pair = _a.pair,
+        pairColors = _a.pairColors;
+
+    var _b = this.getFrequencyData(pair.map, pairColors),
+        labels = _b.labels,
+        data = _b.data,
+        colors = _b.colors;
+
+    if (this.pairChart) {
+      this.pairChart.data.labels = labels;
+      this.pairChart.data.datasets[0].data = data;
+      this.pairChart.data.datasets[0].backgroundColor = colors;
+      this.pairChart.update();
+      return;
+    }
+
+    this.pairChart = new chart_js_1.default(this.pairCtx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [{
+          backgroundColor: colors,
+          data: data
+        }]
+      },
+      options: this.chartOptions
+    });
+  };
 
   Res.prototype.getFrequencyData = function (frequency, colorsMap) {
     var entries = Array.from(frequency.entries());
@@ -21734,35 +21763,7 @@ function updateFrequency() {
     digits: !toolbarForm.digits.checked,
     punctuation: !toolbarForm.punctuation.checked
   });
-} // function formatValue(value: number) {
-//     return +(value * 100).toFixed(2);
-// }
-// function updateFrequencyChart() {
-//     const entries = Array.from(frequency.char.map.entries());
-//     entries.sort((a, b) => b[1] - a[1]);
-//     const labels = entries.map(e => e[0]);
-//     const data = entries.map(e => e[1]).map(v => formatValue(v));
-//     if (frequencyChart) {
-//         frequencyChart.data.labels = labels;
-//         frequencyChart.data.datasets[0].data = data;
-//         frequencyChart.update();
-//         return;
-//     }
-//     frequencyChart = new Chart(frequencyChartCtx, {
-//         type: 'bar',
-//         data: {
-//             labels,
-//             datasets: [{
-//                 backgroundColor: ({ dataIndex, dataset }) => {
-//                     const val = <number>dataset.data[dataIndex];
-//                     return `rgb(${val * 255 / frequency.mostFrequentChar.val / 100},0,0)`;
-//                 },
-//                 data,
-//             }]
-//         },
-//         options: chartOptions,
-//     });
-// }
+}
 },{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/Editor":"scripts/Editor.ts","./scripts/Frequency":"scripts/Frequency.ts","./scripts/Res":"scripts/Res.ts"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

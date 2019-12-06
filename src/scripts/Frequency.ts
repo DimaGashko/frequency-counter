@@ -31,8 +31,8 @@ export default class Frequency {
       this.charColors.clear();
 
       this.char.map.forEach((val, key) => {
-         const r = val * 255 / this.mostFrequentChar.val;
-         this.charColors.set(key, `rgb(${r},0,0)`);
+         const v = val * 255 / this.mostFrequentChar.val;
+         this.charColors.set(key, `rgb(${v},0,0)`);
       });
    }
 
@@ -40,8 +40,8 @@ export default class Frequency {
       this.pairColors.clear();
 
       this.pair.map.forEach((val, key) => {
-         const g = val * 255 / this.mostFrequentPair.val;
-         this.pairColors.set(key, `rgb(0,${g},0)`);
+         const v = val * 255 / this.mostFrequentPair.val;
+         this.pairColors.set(key, `rgb(${v},0,0)`);
       });
    }
 

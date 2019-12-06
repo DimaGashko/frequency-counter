@@ -68,7 +68,28 @@ export default class Res {
    }
 
    private updatePairChart() {
+      const { pair, pairColors } = this.frequency;
+      const { labels, data, colors } = this.getFrequencyData(pair.map, pairColors);
 
+      if (this.pairChart) {
+         this.pairChart.data.labels = labels;
+         this.pairChart.data.datasets[0].data = data;
+         this.pairChart.data.datasets[0].backgroundColor = colors;
+         this.pairChart.update();
+         return;
+      }
+
+      this.pairChart = new Chart(this.pairCtx, {
+         type: 'bar',
+         data: {
+            labels,
+            datasets: [{
+               backgroundColor: colors,
+               data,
+            }]
+         },
+         options: this.chartOptions,
+      });
    }
 
    private getFrequencyData(frequency: Map<string, number>, colorsMap: Map<string, string>) { 

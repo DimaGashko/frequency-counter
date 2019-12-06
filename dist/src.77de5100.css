@@ -528,8 +528,8 @@ body {
   top: 0;
   width: calc(100% - 0.2em);
   height: 100%;
-  padding: 0.5em;
-  padding-right: 0.5em;
+  padding: 0.7em;
+  padding-right: 0.7em;
   overflow: auto;
   white-space: pre-wrap;
   font-family: inherit;
@@ -544,7 +544,8 @@ body {
 }
 
 .app-res {
-  padding: 0.5em;
+  padding: 0.7em;
+  padding-top: 1em;
   border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 @media (min-width: 999px) {
@@ -555,12 +556,16 @@ body {
 }
 .app-res__summary-label {
   margin: 0;
+  margin-bottom: 1em;
   text-align: center;
 }
 .app-res__frequency-chart-container, .app-res__pairs-frequency-chart-container {
   height: 50vh;
   max-height: 500px;
   min-height: 350px;
+}
+.app-res__frequency-chart-container {
+  margin-bottom: 1em;
 }
 
 /*# sourceMappingURL=/src.77de5100.css.map */

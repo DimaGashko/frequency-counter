@@ -2,10 +2,9 @@ import { debounce } from 'throttle-debounce';
 import 'normalize.scss/normalize.scss';
 import './index.scss';
 
-import calcCharPairFrequency, { ICharPairsFrequency } from './scripts/algorithms/char-frequency/calc-char-pair-frequency';
-import calcCharFrequency, { ICharFrequency } from './scripts/algorithms/char-frequency/calc-char-frequency';
 import Editor from './scripts/Editor';
 import Chart from 'chart.js';
+import Frequency from './scripts/Frequency';
 
 const $: { [type: string]: HTMLElement } = {};
 $.root = document.querySelector('.app');
@@ -22,6 +21,7 @@ const $pairsFrequencyChart: HTMLCanvasElement = $.root.querySelector('.app-res__
 const frequencyChartCtx = $frequencyChart.getContext('2d');
 const pairsFrequencyChartCtx = $pairsFrequencyChart.getContext('2d');
 
+const frequency = new Frequency();
 const editor = new Editor($.editor);
 
 const chartOptions: Chart.ChartOptions = {
@@ -31,18 +31,11 @@ const chartOptions: Chart.ChartOptions = {
     }
 }
 
-let frequency: ICharFrequency = null;
-let pairsFrequency: ICharPairsFrequency = null;
-let text = '';
-
-let maxFrequency = 1;
-
 let frequencyChart = null;
 
 const run = debounce(500, () => {
-    text = editor.getText();
     updateFrequency();
-    updateColors();
+    editor.setHighlightMap(frequency.charColors);
     updateSummary();
     updateFrequencyChart();
 });
@@ -71,50 +64,18 @@ function initEvents() {
 }
 
 function updateFrequency() {
-    frequency = calcCharFrequency(text, {
+    frequency.update(editor.getText(), {
         ignoreCase: toolbarForm.case.checked,
         spaces: !toolbarForm.spaces.checked,
         digits: !toolbarForm.digits.checked,
         punctuation: !toolbarForm.punctuation.checked,
     });
-
-    pairsFrequency = calcCharPairFrequency(text);
-}
-
-function updateColors() {
-    const highlightMap = frequencyToHighlightMap(frequency.map);
-    editor.setHighlightMap(highlightMap);
 }
 
 function updateSummary() {
-    $.total.innerHTML = frequency.len + '';
-    $.uniqueChars.innerHTML = frequency.map.size + '';
-    $.uniquePairs.innerHTML = pairsFrequency.map.size + '';
-}
-
-function frequencyToHighlightMap(frequency: Map<string, number>) {
-    const highlightMap: Map<string, string> = new Map();
-    maxFrequency = getMostFrequent(frequency).val;
-
-    frequency.forEach((value, key) => {
-        highlightMap.set(key, `rgb(${value * 255 / maxFrequency},0,0)`);
-    });
-
-    return highlightMap;
-}
-
-function getMostFrequent(frequency: Map<string, number>) {
-    let val = 0;
-    let key = null;
-
-    frequency.forEach((curVal, curKey) => {
-        if (val >= curVal) return;
-
-        val = curVal;
-        key = curKey;
-    });
-
-    return { val, key };
+    $.total.innerHTML = frequency.char.len + '';
+    $.uniqueChars.innerHTML = frequency.char.map.size + '';
+    $.uniquePairs.innerHTML = frequency.pair.map.size + '';
 }
 
 function formatValue(value: number) {
@@ -124,7 +85,7 @@ function formatValue(value: number) {
 function updateFrequencyChart() {
     console.log('hi');
 
-    const entries = Array.from(frequency.map.entries());
+    const entries = Array.from(frequency.char.map.entries());
     entries.sort((a, b) => b[1] - a[1]);
 
     const labels = entries.map(e => e[0]);
@@ -144,7 +105,7 @@ function updateFrequencyChart() {
             datasets: [{
                 backgroundColor: ({ dataIndex, dataset }) => {
                     const val = <number>dataset.data[dataIndex];
-                    return `rgb(${val * 255 / maxFrequency/ 100},0,0)`;
+                    return `rgb(${val * 255 / frequency.mostFrequentChar.val / 100},0,0)`;
                 },
                 data,
             }]

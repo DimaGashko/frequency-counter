@@ -5,14 +5,14 @@ export interface ICharFrequency {
    len: number;
 }
 
-interface IFrequencyOptions {
+export interface ICharFrequencyOptions {
    ignoreCase?: boolean;
    spaces?: boolean;
    digits?: boolean;
    punctuation?: boolean;
 }
 
-const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
+const DEF_FREQUENCY_OPTIONS: ICharFrequencyOptions = {
    ignoreCase: true,
    spaces: false,
    digits: false,
@@ -25,7 +25,7 @@ const DEF_FREQUENCY_OPTIONS: IFrequencyOptions = {
  * @param options
  * @returns map of characters and character frequency (in range [0, 1])
  */
-export default function calcCharFrequency(text: string, options?: IFrequencyOptions): ICharFrequency {   
+export default function calcCharFrequency(text: string, options?: ICharFrequencyOptions): ICharFrequency {   
    options = { ...DEF_FREQUENCY_OPTIONS, ...options || {} };
    text = prepareText(text, options);
 
@@ -35,7 +35,7 @@ export default function calcCharFrequency(text: string, options?: IFrequencyOpti
    }
 }
 
-function prepareText(text: string, options: IFrequencyOptions): string {
+function prepareText(text: string, options: ICharFrequencyOptions): string {
    const { ignoreCase, spaces, digits, punctuation } = options;
 
    text = text.trim();

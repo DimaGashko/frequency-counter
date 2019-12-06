@@ -553,5 +553,14 @@ body {
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
+.app-res__summary-label {
+  margin: 0;
+  text-align: center;
+}
+.app-res__frequency-chart-container, .app-res__pairs-frequency-chart-container {
+  height: 50vh;
+  max-height: 500px;
+  min-height: 350px;
+}
 
 /*# sourceMappingURL=/src.77de5100.css.map */

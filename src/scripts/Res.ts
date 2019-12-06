@@ -43,15 +43,13 @@ export default class Res {
    }
 
    private updateCharChart() {
-      const entries = Array.from(this.frequency.char.map.entries());
-      entries.sort((a, b) => b[1] - a[1]);
-
-      const labels = entries.map(e => e[0]);
-      const data = entries.map(e => e[1]).map(v => this.formatValue(v));
+      const { char, charColors } = this.frequency;
+      const { labels, data, colors } = this.getFrequencyData(char.map, charColors);
 
       if (this.charChart) {
          this.charChart.data.labels = labels;
          this.charChart.data.datasets[0].data = data;
+         this.charChart.data.datasets[0].backgroundColor = colors;
          this.charChart.update();
          return;
       }
@@ -61,10 +59,7 @@ export default class Res {
          data: {
             labels,
             datasets: [{
-               backgroundColor: ({ dataIndex, dataset }) => {
-                  const val = <number>dataset.data[dataIndex];
-                  return `rgb(${val * 255 / this.frequency.mostFrequentChar.val / 100},0,0)`;
-               },
+               backgroundColor: colors,
                data,
             }]
          },
@@ -76,8 +71,15 @@ export default class Res {
 
    }
 
-   private formatValue(value: number) {
-      return +(value * 100).toFixed(2);
+   private getFrequencyData(frequency: Map<string, number>, colorsMap: Map<string, string>) { 
+      const entries = Array.from(frequency.entries());
+      entries.sort((a, b) => b[1] - a[1]);
+
+      const labels = entries.map(e => e[0]);
+      const data = entries.map(e => e[1]).map(v => +(v * 100).toFixed(2));
+      const colors = labels.map((key) => colorsMap.get(key));
+
+      return { labels, data, colors }
    }
 
    private updateSummary() {

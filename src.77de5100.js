@@ -21594,24 +21594,19 @@ function () {
   };
 
   Res.prototype.updateCharChart = function () {
-    var _this = this;
+    var _a = this.frequency,
+        char = _a.char,
+        charColors = _a.charColors;
 
-    var entries = Array.from(this.frequency.char.map.entries());
-    entries.sort(function (a, b) {
-      return b[1] - a[1];
-    });
-    var labels = entries.map(function (e) {
-      return e[0];
-    });
-    var data = entries.map(function (e) {
-      return e[1];
-    }).map(function (v) {
-      return _this.formatValue(v);
-    });
+    var _b = this.getFrequencyData(char.map, charColors),
+        labels = _b.labels,
+        data = _b.data,
+        colors = _b.colors;
 
     if (this.charChart) {
       this.charChart.data.labels = labels;
       this.charChart.data.datasets[0].data = data;
+      this.charChart.data.datasets[0].backgroundColor = colors;
       this.charChart.update();
       return;
     }
@@ -21621,12 +21616,7 @@ function () {
       data: {
         labels: labels,
         datasets: [{
-          backgroundColor: function backgroundColor(_a) {
-            var dataIndex = _a.dataIndex,
-                dataset = _a.dataset;
-            var val = dataset.data[dataIndex];
-            return "rgb(" + val * 255 / _this.frequency.mostFrequentChar.val / 100 + ",0,0)";
-          },
+          backgroundColor: colors,
           data: data
         }]
       },
@@ -21636,8 +21626,27 @@ function () {
 
   Res.prototype.updatePairChart = function () {};
 
-  Res.prototype.formatValue = function (value) {
-    return +(value * 100).toFixed(2);
+  Res.prototype.getFrequencyData = function (frequency, colorsMap) {
+    var entries = Array.from(frequency.entries());
+    entries.sort(function (a, b) {
+      return b[1] - a[1];
+    });
+    var labels = entries.map(function (e) {
+      return e[0];
+    });
+    var data = entries.map(function (e) {
+      return e[1];
+    }).map(function (v) {
+      return +(v * 100).toFixed(2);
+    });
+    var colors = labels.map(function (key) {
+      return colorsMap.get(key);
+    });
+    return {
+      labels: labels,
+      data: data,
+      colors: colors
+    };
   };
 
   Res.prototype.updateSummary = function () {

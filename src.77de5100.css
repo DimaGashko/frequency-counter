@@ -506,6 +506,11 @@ body {
     overflow: auto;
   }
 }
+@media (min-width: 1200px) {
+  .app-res {
+    flex: 2;
+  }
+}
 
 .app-editor {
   position: relative;
@@ -540,9 +545,11 @@ body {
 
 .app-res {
   padding: 0.5em;
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
 }
 @media (min-width: 999px) {
   .app-res {
+    border: none;
     border-left: 1px solid rgba(0, 0, 0, 0.12);
   }
 }

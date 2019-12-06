@@ -472,7 +472,7 @@ function prepareText(text, options) {
   if (!digits) text = text.replace(/\d+/g, '');
 
   if (!punctuation) {
-    text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]+/g, '');
+    text = text.replace(/[.,\/#!$\?%\^&\*";:{}=\-_`~()]+/g, '');
   }
 
   return text;
@@ -21474,19 +21474,28 @@ $.total = $.root.querySelector('.app-res__total');
 $.uniqueChars = $.root.querySelector('.app-res__unique-chars');
 $.uniquePairs = $.root.querySelector('.app-res__unique-pairs');
 var toolbarForm = $.root.querySelector('.app-toolbar__form');
-var frequencyChart = $.root.querySelector('.app-res__frequency-chart');
-var pairsFrequencyChart = $.root.querySelector('.app-res__pairs-frequency-chart');
-var frequencyChartCtx = frequencyChart.getContext('2d');
-var pairsFrequencyChartCtx = pairsFrequencyChart.getContext('2d');
+var $frequencyChart = $.root.querySelector('.app-res__frequency-chart');
+var $pairsFrequencyChart = $.root.querySelector('.app-res__pairs-frequency-chart');
+var frequencyChartCtx = $frequencyChart.getContext('2d');
+var pairsFrequencyChartCtx = $pairsFrequencyChart.getContext('2d');
 var editor = new Editor_1.default($.editor);
+var chartOptions = {
+  maintainAspectRatio: false,
+  legend: {
+    display: false
+  }
+};
 var frequency = null;
 var pairsFrequency = null;
 var text = '';
+var maxFrequency = 1;
+var frequencyChart = null;
 var run = throttle_debounce_1.debounce(500, function () {
   text = editor.getText();
   updateFrequency();
   updateColors();
   updateSummary();
+  updateFrequencyChart();
 });
 init();
 initEvents();
@@ -21532,7 +21541,7 @@ function updateSummary() {
 
 function frequencyToHighlightMap(frequency) {
   var highlightMap = new Map();
-  var maxFrequency = getMostFrequent(frequency).val;
+  maxFrequency = getMostFrequent(frequency).val;
   frequency.forEach(function (value, key) {
     highlightMap.set(key, "rgb(" + value * 255 / maxFrequency + ",0,0)");
   });
@@ -21553,28 +21562,49 @@ function getMostFrequent(frequency) {
   };
 }
 
-var myChart = new chart_js_1.default(frequencyChartCtx, {
-  type: 'bar',
-  data: {
-    labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
-    datasets: [{
-      label: '# of Votes',
-      data: [12, 19, 3, 5, 2, 3, 1, 2, 3, 4],
-      backgroundColor: ['rgba(255, 99, 132, 2)', 'rgba(54, 162, 235, 2)', 'rgba(255, 206, 86, 2)', 'rgba(75, 192, 192, 2)', 'rgba(153, 102, 255, 2)', 'rgba(255, 159, 64, 2)']
-    }]
-  },
-  options: {
-    maintainAspectRatio: false,
-    scales: {
-      yAxes: [{
-        ticks: {
-          beginAtZero: true
-        }
-      }]
-    }
+function formatValue(value) {
+  return +(value * 100).toFixed(2);
+}
+
+function updateFrequencyChart() {
+  console.log('hi');
+  var entries = Array.from(frequency.map.entries());
+  entries.sort(function (a, b) {
+    return b[1] - a[1];
+  });
+  var labels = entries.map(function (e) {
+    return e[0];
+  });
+  var data = entries.map(function (e) {
+    return e[1];
+  }).map(function (v) {
+    return formatValue(v);
+  });
+
+  if (frequencyChart) {
+    frequencyChart.data.labels = labels;
+    frequencyChart.data.datasets[0].data = data;
+    frequencyChart.update();
+    return;
   }
-});
-myChart.update;
+
+  frequencyChart = new chart_js_1.default(frequencyChartCtx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        backgroundColor: function backgroundColor(_a) {
+          var dataIndex = _a.dataIndex,
+              dataset = _a.dataset;
+          var val = dataset.data[dataIndex];
+          return "rgb(" + val * 255 / maxFrequency / 100 + ",0,0)";
+        },
+        data: data
+      }]
+    },
+    options: chartOptions
+  });
+}
 },{"throttle-debounce":"../node_modules/throttle-debounce/dist/index.esm.js","normalize.scss/normalize.scss":"../node_modules/normalize.scss/normalize.scss","./index.scss":"index.scss","./scripts/algorithms/char-frequency/calc-char-pair-frequency":"scripts/algorithms/char-frequency/calc-char-pair-frequency.ts","./scripts/algorithms/char-frequency/calc-char-frequency":"scripts/algorithms/char-frequency/calc-char-frequency.ts","./scripts/Editor":"scripts/Editor.ts","chart.js":"../node_modules/chart.js/dist/Chart.js"}],"../../../../../../usr/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';

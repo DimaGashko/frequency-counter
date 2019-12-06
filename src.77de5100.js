@@ -448,6 +448,7 @@ var DEF_FREQUENCY_OPTIONS = {
  */
 
 function calcCharFrequency(text, options) {
+  console.log(options);
   options = __assign(__assign({}, DEF_FREQUENCY_OPTIONS), options || {});
   text = prepareText(text, options);
   return _calc_frequency_1.default(text.split(''));
@@ -540,8 +541,8 @@ var Editor =
 function () {
   function Editor(root) {
     this.root = root;
-    this.MAX_HIGHLIGHT_LEN = 10000;
-    this.MAX_LIVE_HIGHLIGHT_LEN = 2000;
+    this.MAX_HIGHLIGHT_LEN = 5000;
+    this.MAX_LIVE_HIGHLIGHT_LEN = 1000;
     this._value = '';
     this.$ = {};
     this._decTextUpdatingFrame = 0;
@@ -703,8 +704,22 @@ $.root = document.querySelector('.app');
 $.editor = $.root.querySelector('.app-editor');
 var toolbarForm = $.root.querySelector('.app-toolbar__form');
 var editor = new editor_1.default($.editor);
+var run = throttle_debounce_1.debounce(500, function run() {
+  var text = editor.getText();
+  var frequency = calc_char_frequency_1.default(text, {
+    ignoreCase: toolbarForm.case.checked,
+    spaces: !toolbarForm.spaces.checked,
+    digits: !toolbarForm.digits.checked,
+    punctuation: !toolbarForm.punctuation.checked
+  });
+  var highlightMap = frequencyToHighlightMap(frequency);
+  editor.setHighlightMap(highlightMap);
+  console.log(frequency);
+  console.log(highlightMap);
+});
 init();
 initEvents();
+run();
 
 function init() {
   editor.setHighlight(toolbarForm.highlight.checked);
@@ -722,20 +737,6 @@ function initEvents() {
   toolbarForm.digits.addEventListener('change', run);
   toolbarForm.punctuation.addEventListener('change', run);
 }
-
-var run = throttle_debounce_1.debounce(500, function run() {
-  var text = editor.getText();
-  var frequency = calc_char_frequency_1.default(text, {
-    ignoreCase: toolbarForm.case,
-    spaces: !toolbarForm.spaces,
-    digits: !toolbarForm.digits,
-    punctuation: !toolbarForm.punctuation
-  });
-  var highlightMap = frequencyToHighlightMap(frequency);
-  editor.setHighlightMap(highlightMap);
-  console.log(frequency);
-  console.log(highlightMap);
-});
 
 function frequencyToHighlightMap(frequency) {
   var highlightMap = new Map();
@@ -790,7 +791,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36727" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45725" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

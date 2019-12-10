@@ -25,9 +25,7 @@ Check it out: https://dimagashko.github.io/frequency-counter
 ## Build
 
 ```bash
-npm i
-npm start
-npm run build
+yarn
+yarn start
+yarn build
 ```
-
-p.s. you should use yarn if you want to contribute to this repo

@@ -9,7 +9,7 @@
    },
    "dependencies": {
       "@types/chart.js": "^2.9.3",
-      "chart.js": "^2.9.3",
+      "chart.js": "^2.9.4",
       "throttle-debounce": "^2.1.0"
    },
    "devDependencies": {
